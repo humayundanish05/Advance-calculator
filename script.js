@@ -1,3 +1,5 @@
+let memory = 0; // 🧠 Memory storage
+
 const display = document.getElementById("display");
 const buttons = document.querySelectorAll("button");
 
@@ -35,3 +37,49 @@ function evaluateExpression(expr) {
 
   return Function('"use strict"; return (' + expr + ')')();
 }
+
+buttons.forEach(btn => {
+  btn.addEventListener("click", () => {
+    let value = btn.textContent;
+
+    switch (value) {
+      case "AC":
+        display.value = "";
+        break;
+      case "=":
+        try {
+          display.value = evaluateExpression(display.value);
+        } catch {
+          display.value = "Error";
+        }
+        break;
+      case "√":
+        display.value += "sqrt(";
+        break;
+      case "sin":
+      case "cos":
+      case "tan":
+      case "log":
+        display.value += value + "(";
+        break;
+      case "MC":
+        memory = 0;
+        break;
+      case "MR":
+        display.value += memory;
+        break;
+      case "M+":
+        try {
+          memory += parseFloat(evaluateExpression(display.value));
+        } catch {}
+        break;
+      case "M-":
+        try {
+          memory -= parseFloat(evaluateExpression(display.value));
+        } catch {}
+        break;
+      default:
+        display.value += value;
+    }
+  });
+});
